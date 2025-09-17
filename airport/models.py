@@ -3,3 +3,7 @@ from django.db import models
 class Crew(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
+
+
+class AirplaneType(models.Model):
+    name = models.CharField(max_length=100)
