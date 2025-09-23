@@ -67,6 +67,9 @@ class Route(models.Model):
     def __str__(self):
         return f"{self.source.name} -> {self.destination.name}"
 
+    class Meta:
+        unique_together = ("source", "destination")
+
 
 class Flight(models.Model):
     route = models.ForeignKey(
@@ -102,3 +105,6 @@ class Ticket(models.Model):
 
     def __str__(self):
         return f"Ticket {self.id}: Row {self.row} Seat {self.seat} flight {self.flight.id}"
+
+    class Meta:
+        unique_together = ("flight", "row", "seat")
