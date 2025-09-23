@@ -46,6 +46,10 @@ class Airplane(models.Model):
     def __str__(self):
         return self.name
 
+    @property
+    def total_seats(self):
+        return self.rows * self.seats_in_row
+
 
 class Route(models.Model):
     source = models.ForeignKey(
