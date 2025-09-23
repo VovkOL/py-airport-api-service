@@ -6,19 +6,31 @@ class Crew(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
 
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"
+
 
 class AirplaneType(models.Model):
     name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
 
 
 class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return f"Order {self.id} by {self.user.username}"
+
 
 class Airport(models.Model):
     name = models.CharField(max_length=100)
     closest_big_city = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
 
 
 class Airplane(models.Model):
@@ -30,6 +42,9 @@ class Airplane(models.Model):
         on_delete=models.CASCADE,
         related_name="airplanes"
     )
+
+    def __str__(self):
+        return self.name
 
 
 class Route(models.Model):
@@ -45,6 +60,10 @@ class Route(models.Model):
     )
     distance = models.IntegerField()
 
+    def __str__(self):
+        return f"{self.source.name} -> {self.destination.name}"
+
+
 class Flight(models.Model):
     route = models.ForeignKey(
         Route,
@@ -58,6 +77,9 @@ class Flight(models.Model):
     )
     departure_time = models.DateTimeField()
     arrival_time = models.DateTimeField()
+
+    def __str__(self):
+        return f"Flight {self.id}: {self.route} at {self.departure_time}"
 
 
 class Ticket(models.Model):
@@ -73,3 +95,6 @@ class Ticket(models.Model):
         on_delete=models.CASCADE,
         related_name="tickets"
     )
+
+    def __str__(self):
+        return f"Ticket {self.id}: Row {self.row} Seat {self.seat} flight {self.flight.id}"
