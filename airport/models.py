@@ -12,8 +12,8 @@ class AirplaneType(models.Model):
 
 
 class Order(models.Model):
-    crated_at = models.DateTimeField(auto_now_add=True)
-    User = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
 class Airport(models.Model):
@@ -28,12 +28,16 @@ class Airplane(models.Model):
     airplane_type = models.ForeignKey(
         AirplaneType,
         on_delete=models.CASCADE,
-        related_name="airports"
+        related_name="airplanes"
     )
 
 
 class Route(models.Model):
-    source = models.ForeignKey(Airport, on_delete=models.CASCADE)
+    source = models.ForeignKey(
+        Airport,
+        on_delete=models.CASCADE,
+        related_name="routes"
+    )
     destination = models.ForeignKey(
         Airport,
         on_delete=models.CASCADE,
