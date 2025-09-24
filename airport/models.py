@@ -94,7 +94,7 @@ class Flight(models.Model):
         return f"Flight {self.id}: {self.route} at {self.departure_time}"
 
     def clean(self):
-        if self.departure_time <= self.arrival_time:
+        if self.departure_time >= self.arrival_time:
             raise ValidationError("Arrival time must be after departure time")
 
 
@@ -111,6 +111,34 @@ class Ticket(models.Model):
         on_delete=models.CASCADE,
         related_name="tickets"
     )
+
+    @staticmethod
+    def validate_ticket(row, seat, airplane, error_to_raise):
+        for ticket_attr_value, ticket_attr_name, airplane_attr_name in [
+            (row, "row", "rows"),
+            (seat, "seat", "seats_in_row"),
+        ]:
+            count_attrs = getattr(airplane, airplane_attr_name)
+            if not (1 <= ticket_attr_value <= count_attrs):
+                raise error_to_raise(
+                    {
+                        ticket_attr_name: (
+                            f"{ticket_attr_name} number must be in available range: ",
+                            f"(1, {count_attrs}) ",
+                        )
+                    }
+                )
+
+    def clean(self):
+        Ticket.validate_ticket(
+            self.row,
+            self.seat,
+            self.flight.airplane,
+            ValidationError
+        )
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        return super().save(*args, **kwargs)
 
     def __str__(self):
         return f"Ticket {self.id}: Row {self.row} Seat {self.seat} flight {self.flight.id}"
