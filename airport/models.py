@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -70,6 +71,10 @@ class Route(models.Model):
     class Meta:
         unique_together = ("source", "destination")
 
+    def clean(self):
+        if self.source == self.destination:
+            raise ValidationError("Source and destination can not be the same")
+
 
 class Flight(models.Model):
     route = models.ForeignKey(
@@ -87,6 +92,10 @@ class Flight(models.Model):
 
     def __str__(self):
         return f"Flight {self.id}: {self.route} at {self.departure_time}"
+
+    def clean(self):
+        if self.departure_time <= self.arrival_time:
+            raise ValidationError("Arrival time must be after departure time")
 
 
 class Ticket(models.Model):
