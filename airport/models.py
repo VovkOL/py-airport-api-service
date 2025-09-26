@@ -89,6 +89,10 @@ class Flight(models.Model):
     )
     departure_time = models.DateTimeField()
     arrival_time = models.DateTimeField()
+    crew = models.ManyToManyField(
+        Crew,
+        related_name="flights"
+    )
 
     def __str__(self):
         return f"Flight {self.id}: {self.route} at {self.departure_time}"
