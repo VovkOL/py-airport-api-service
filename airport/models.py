@@ -47,6 +47,12 @@ class Airplane(models.Model):
     def __str__(self):
         return self.name
 
+    def clean(self):
+        if self.seats_in_row <= 0:
+            raise ValidationError("Seats must be positive")
+        if self.rows <= 0:
+            raise ValidationError("Rows must be positive")
+
     @property
     def total_seats(self):
         return self.rows * self.seats_in_row
@@ -74,6 +80,8 @@ class Route(models.Model):
     def clean(self):
         if self.source == self.destination:
             raise ValidationError("Source and destination can not be the same")
+        if self.distance <= 0:
+            raise ValidationError("Distance must be positive")
 
 
 class Flight(models.Model):
