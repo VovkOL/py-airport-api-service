@@ -39,9 +39,7 @@ class Airplane(models.Model):
     rows = models.IntegerField()
     seats_in_row = models.IntegerField()
     airplane_type = models.ForeignKey(
-        AirplaneType,
-        on_delete=models.CASCADE,
-        related_name="airplanes"
+        AirplaneType, on_delete=models.CASCADE, related_name="airplanes"
     )
 
     def __str__(self):
@@ -60,14 +58,10 @@ class Airplane(models.Model):
 
 class Route(models.Model):
     source = models.ForeignKey(
-        Airport,
-        on_delete=models.CASCADE,
-        related_name="source_routes"
+        Airport, on_delete=models.CASCADE, related_name="source_routes"
     )
     destination = models.ForeignKey(
-        Airport,
-        on_delete=models.CASCADE,
-        related_name="destination_routes"
+        Airport, on_delete=models.CASCADE, related_name="destination_routes"
     )
     distance = models.IntegerField()
 
@@ -85,22 +79,13 @@ class Route(models.Model):
 
 
 class Flight(models.Model):
-    route = models.ForeignKey(
-        Route,
-        on_delete=models.CASCADE,
-        related_name="flights"
-    )
+    route = models.ForeignKey(Route, on_delete=models.CASCADE, related_name="flights")
     airplane = models.ForeignKey(
-        Airplane,
-        on_delete=models.CASCADE,
-        related_name="flights"
+        Airplane, on_delete=models.CASCADE, related_name="flights"
     )
     departure_time = models.DateTimeField()
     arrival_time = models.DateTimeField()
-    crew = models.ManyToManyField(
-        Crew,
-        related_name="flights"
-    )
+    crew = models.ManyToManyField(Crew, related_name="flights")
 
     def __str__(self):
         return f"Flight {self.id}: {self.route} at {self.departure_time}"
@@ -113,16 +98,8 @@ class Flight(models.Model):
 class Ticket(models.Model):
     row = models.IntegerField()
     seat = models.IntegerField()
-    flight = models.ForeignKey(
-        Flight,
-        on_delete=models.CASCADE,
-        related_name="tickets"
-    )
-    order = models.ForeignKey(
-        Order,
-        on_delete=models.CASCADE,
-        related_name="tickets"
-    )
+    flight = models.ForeignKey(Flight, on_delete=models.CASCADE, related_name="tickets")
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="tickets")
 
     @staticmethod
     def validate_ticket(row, seat, airplane, error_to_raise):
@@ -143,17 +120,17 @@ class Ticket(models.Model):
 
     def clean(self):
         Ticket.validate_ticket(
-            self.row,
-            self.seat,
-            self.flight.airplane,
-            ValidationError
+            self.row, self.seat, self.flight.airplane, ValidationError
         )
+
     def save(self, *args, **kwargs):
         self.full_clean()
         return super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"Ticket {self.id}: Row {self.row} Seat {self.seat} flight {self.flight.id}"
+        return (
+            f"Ticket {self.id}: Row {self.row} Seat {self.seat} flight {self.flight.id}"
+        )
 
     class Meta:
         unique_together = ("flight", "row", "seat")
