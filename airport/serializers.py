@@ -13,3 +13,6 @@ class AirplaneSerializer(serializers.ModelSerializer):
     class Meta:
         model = Airplane
         fields = ("id", "name")
+
+
+class
