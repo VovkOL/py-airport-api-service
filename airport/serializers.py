@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from airport.models import Crew, Airplane
+from airport.models import Crew, Airplane, Order
 
 
 class CrewSerializer(serializers.ModelSerializer):
@@ -15,4 +15,7 @@ class AirplaneSerializer(serializers.ModelSerializer):
         fields = ("id", "name")
 
 
-class
+class OrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = ("id", "created_at", "user")
