@@ -46,6 +46,13 @@ class RouteSerializer(serializers.ModelSerializer):
         fields = ("id", "source", "destination", "distance")
 
 
+class RouteListSerializer(RouteSerializer):
+    source = serializers.StringRelatedField()
+    destination = serializers.StringRelatedField()
+    class Meta:
+        fields = ("id", "source", "destination")
+
+
 class FlightSerializer(serializers.ModelSerializer):
     class Meta:
         model = Flight
