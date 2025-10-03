@@ -55,7 +55,7 @@ class RouteListSerializer(RouteSerializer):
         fields = ("id", "source", "destination")
 
 
-class RouteRetrieveSerializer(RouteSerializer):
+class RouteDetailSerializer(RouteSerializer):
     source = AirportSerializer(read_only=True)
     destination = AirportSerializer(read_only=True)
 
