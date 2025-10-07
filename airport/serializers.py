@@ -125,3 +125,9 @@ class TicketSerializer(serializers.ModelSerializer):
 class TicketListSerializer(TicketSerializer):
     flight = serializers.StringRelatedField(many=False, read_only=True)
     order = serializers.StringRelatedField(many=False, read_only=True)
+
+
+class TicketSeatSerializer(TicketSerializer):
+    class Meta:
+        model = Ticket
+        fields = ("row", "seat")
