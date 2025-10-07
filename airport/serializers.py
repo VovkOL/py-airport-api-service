@@ -120,3 +120,8 @@ class TicketSerializer(serializers.ModelSerializer):
             "flight",
             "order",
         )
+
+
+class TicketListSerializer(TicketSerializer):
+    flight = serializers.StringRelatedField(many=False, read_only=True)
+    order = serializers.StringRelatedField(many=False, read_only=True)
