@@ -5,7 +5,7 @@ from django.shortcuts import render
 from rest_framework import viewsets, mixins
 from rest_framework.viewsets import GenericViewSet
 
-from airport.models import Crew, AirplaneType, Airport, Airplane, Route, Flight
+from airport.models import Crew, AirplaneType, Airport, Airplane, Route, Flight, Order
 from airport.serializers import (
     CrewSerializer,
     AirplaneTypeSerializer,
@@ -16,7 +16,7 @@ from airport.serializers import (
     RouteDetailSerializer,
     FlightSerializer,
     FlightListSerializer,
-    FlightDetailSerializer
+    FlightDetailSerializer, OrderListSerializer, OrderSerializer
 )
 
 
@@ -114,3 +114,23 @@ class FlightViewSet(viewsets.ModelViewSet):
             return FlightDetailSerializer
 
         return FlightSerializer
+
+
+class OrderViewSet(
+    mixins.CreateModelMixin,
+    mixins.ListModelMixin,
+    GenericViewSet,
+):
+    queryset = Order.objects.all().prefetch_related("tickets")
+    serializer_class = OrderSerializer
+
+    def get_queryset(self):
+        return Order.objects.filter(user=self.request.user)
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return OrderListSerializer
+        return OrderSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
