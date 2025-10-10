@@ -2,6 +2,7 @@ from datetime import datetime
 
 from django.db.models import F, Count
 from django.shortcuts import render
+from django.utils import timezone
 from rest_framework import viewsets, mixins
 from rest_framework.viewsets import GenericViewSet
 
@@ -95,7 +96,7 @@ class FlightViewSet(viewsets.ModelViewSet):
         date = self.request.query_params.get("date")
         route_id_str = self.request.query_params.get("route")
 
-        queryset = self.queryset
+        queryset = self.queryset.filter(detarture_time__gte=timezone.now())
 
         if date:
             date = datetime.strptime(date, "%Y-%m-%d").date()
